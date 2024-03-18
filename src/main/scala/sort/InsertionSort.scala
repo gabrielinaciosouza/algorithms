@@ -1,32 +1,26 @@
 package sort
 
 import scala.annotation.tailrec
+import scala.reflect.ClassTag
 
 case object InsertionSort {
-  def apply[A](iterable: Iterable[A])(implicit ordering: Ordering[A]): Iterable[A] = {
-    helper(1, iterable.toSeq)
+  def apply[A: ClassTag](iterable: Iterable[A])(implicit ordering: Ordering[A]): Iterable[A] = {
+    val array = iterable.toArray[A]
+    sortArray(array)
+    array
   }
 
   @tailrec
-  def helper[A](i: Int, seq: Seq[A])(implicit ordering: Ordering[A]): Iterable[A] = {
-    if (i >= seq.length) {
-      seq
-    } else {
-      ordering.compare(seq(i), seq(i - 1)) match {
-        case value if value < 0 => helper(i + 1, sort(i, seq))
-        case _ => helper(i + 1, seq)
+  private def sortArray[A](arr: Array[A], i: Int = 1)(implicit ordering: Ordering[A]): Unit = {
+    if (i < arr.length) {
+      var j = i
+      while (j > 0 && ordering.compare(arr(j - 1), arr(j)) > 0) {
+        val temp = arr(j)
+        arr(j) = arr(j - 1)
+        arr(j - 1) = temp
+        j -= 1
       }
-    }
-  }
-
-  @tailrec
-  def sort[A](index: Int, seq: Seq[A])(implicit ordering: Ordering[A]): Seq[A] = {
-    if (index <= 0) {
-      seq
-    } else {
-      ordering.compare(seq(index), seq(index - 1)) match
-        case value if value < 0 => sort(index - 1, seq.updated(index, seq(index - 1)).updated(index - 1, seq(index)))
-        case _ => seq
+      sortArray(arr, i + 1)
     }
   }
 }

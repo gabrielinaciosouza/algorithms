@@ -3,7 +3,7 @@ package sort
 import munit.FunSuite
 
 class InsertionSortTest extends FunSuite {
-  test("BinarySearch should return correct value") {
+  test("InsertionSort should return correct value") {
     implicit val ordering: Ordering.Int.type = Ordering.Int
     val list = Seq(3, 1, 5, 2, 0, 4)
 
